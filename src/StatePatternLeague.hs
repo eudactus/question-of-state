@@ -13,7 +13,7 @@ resultPoints team (MatchResult ta sa tb sb)
     where winner = if sa > sb then ta else tb
 
 addResult :: [Score] -> MatchResult -> [Score]
-addResult scores _ = scores -- TODO
+addResult scores _ = scores -- TODO...
 
 calculateScores :: [MatchResult] -> [Score]
 calculateScores _ = []
