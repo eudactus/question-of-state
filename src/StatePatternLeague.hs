@@ -14,3 +14,6 @@ resultPoints team (MatchResult ta sa tb sb)
 
 addResult :: Scores -> MatchResult -> Scores
 addResult scores _ = scores -- TODO
+
+calculateScores :: [MatchResult] -> Scores
+calculateScores _ = []
