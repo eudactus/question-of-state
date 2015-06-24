@@ -1,6 +1,6 @@
 module Main where
 
-import League
+import StatePatternLeague
 
 plymouthArgyle :: Team
 plymouthArgyle = "Plymouth Argyle"

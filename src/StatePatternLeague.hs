@@ -1,4 +1,4 @@
-module League where
+module StatePatternLeague where
 
 type Team = String
 data MatchResult = MatchResult{teamA :: Team, scoreA :: Int, teamB :: Team, scoreB :: Int}

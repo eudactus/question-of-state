@@ -1,7 +1,7 @@
-module Test where
+module LeagueTest where
 
 import Test.Hspec
-import League
+import StatePatternLeague
 
 liverpool :: Team
 liverpool = "Liverpool"
