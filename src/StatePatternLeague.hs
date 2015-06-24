@@ -3,7 +3,7 @@ module StatePatternLeague where
 type Team = String
 data MatchResult = MatchResult{teamA :: Team, scoreA :: Int, teamB :: Team, scoreB :: Int}
 type Points = Int
-type Scores = [(Team, Points)]
+type Score = (Team, Points)
 
 resultPoints :: Team -> MatchResult -> Points
 resultPoints team (MatchResult ta sa tb sb)
@@ -12,8 +12,8 @@ resultPoints team (MatchResult ta sa tb sb)
     | otherwise = 0
     where winner = if sa > sb then ta else tb
 
-addResult :: Scores -> MatchResult -> Scores
+addResult :: [Score] -> MatchResult -> [Score]
 addResult scores _ = scores -- TODO
 
-calculateScores :: [MatchResult] -> Scores
+calculateScores :: [MatchResult] -> [Score]
 calculateScores _ = []
