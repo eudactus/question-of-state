@@ -19,8 +19,12 @@ resultPoints team (MatchResult ta sa tb sb)
 addResult :: LeagueTable -> MatchResult -> LeagueTable
 addResult table _ = table -- TODO
 
-resultScores :: MatchResult -> [Score]
-resultScores _ = [] -- TODO
+resultsScores :: [MatchResult] -> [Score]
+resultsScores _ = [] -- TODO
 
+-- fold over list Score where acc is LeagueTable
 calculateTable :: [MatchResult] -> LeagueTable
-calculateTable _ = M.fromList []
+calculateTable results = foldl applyScore M.empty $ resultsScores results
+
+applyScore :: LeagueTable -> Score -> LeagueTable
+applyScore _ _ = M.empty -- TODO
