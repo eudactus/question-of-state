@@ -1,15 +1,20 @@
 module StatePatternLeague where
 
+import Data.List
+import Data.Ord
 import qualified Data.Map.Strict as M
 
 type Team = String
 data MatchResult = MatchResult{teamA :: Team, scoreA :: Int, teamB :: Team, scoreB :: Int}
 type Points = Int
 type Score = (Team, Points)
-type LeagueTable = M.Map Team Points
+type LeagueMap = M.Map Team Points
 
-calculateTable :: [MatchResult] -> LeagueTable
-calculateTable results = foldl updateTable M.empty $ resultsScores results
+leagueTable :: [MatchResult] -> [Score]
+leagueTable results = reverse . sortBy (comparing snd) $ M.toList (calculateLeagueMap results)
+
+calculateLeagueMap :: [MatchResult] -> LeagueMap
+calculateLeagueMap results = foldl updateLeague M.empty $ resultsScores results
 
 resultsScores :: [MatchResult] -> [Score]
 resultsScores [] = []
@@ -21,7 +26,7 @@ resultScores (MatchResult ta sa tb sb)
     | sa < sb   = [(ta, 0), (tb, 2)]
     | otherwise = [(ta, 1), (tb, 1)]
 
-updateTable :: LeagueTable -> Score -> LeagueTable
-updateTable table (team, points) =
-    case M.lookup team table of Nothing -> M.insert team points table
-                                Just oldPoints -> M.adjust (\_ -> oldPoints + points) team table
+updateLeague :: LeagueMap -> Score -> LeagueMap
+updateLeague leagueMap (team, points) =
+    case M.lookup team leagueMap of Nothing -> M.insert team points leagueMap
+                                    Just oldPoints -> M.adjust (\_ -> oldPoints + points) team leagueMap
