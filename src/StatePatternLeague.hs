@@ -1,6 +1,5 @@
 module StatePatternLeague where
 
--- https://downloads.haskell.org/~ghc/latest/docs/html/libraries/containers/Data-Map-Strict.html
 import qualified Data.Map.Strict as M
 
 type Team = String
@@ -11,8 +10,8 @@ type LeagueTable = M.Map Team Points
 
 resultScores :: MatchResult -> [Score]
 resultScores (MatchResult ta sa tb sb)
-    | sa > sb = [(ta, 2), (tb, 0)]
-    | sa < sb = [(ta, 0), (tb, 2)]
+    | sa > sb   = [(ta, 2), (tb, 0)]
+    | sa < sb   = [(ta, 0), (tb, 2)]
     | otherwise = [(ta, 1), (tb, 1)]
 
 resultsScores :: [MatchResult] -> [Score]
