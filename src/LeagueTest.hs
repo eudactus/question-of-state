@@ -28,6 +28,8 @@ main = hspec $ do
             M.lookup plymouthArgyle table `shouldBe` Just 1
     describe "leagueTable" $ do
         it "given one result has two scores ordered by points" $ do
-            leagueTable [(MatchResult celtic 1 liverpool 0)] `shouldBe` [(celtic, 2), (liverpool, 0)]
+            leagueTable [(MatchResult celtic 1 liverpool 0)]
+            `shouldBe` [(celtic, 2), (liverpool, 0)]
         it "given two results has scores ordered by points" $ do
-            leagueTable [(MatchResult celtic 1 liverpool 0),(MatchResult celtic 1 plymouthArgyle 1)] `shouldBe` [(celtic, 3), (plymouthArgyle, 1), (liverpool, 0)]            
+            leagueTable [(MatchResult celtic 1 liverpool 0),(MatchResult celtic 1 plymouthArgyle 1)]
+            `shouldBe` [(celtic, 3), (plymouthArgyle, 1), (liverpool, 0)]            
