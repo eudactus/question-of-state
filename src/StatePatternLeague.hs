@@ -29,4 +29,4 @@ resultScores (MatchResult ta sa tb sb)
 updateLeague :: LeagueMap -> Score -> LeagueMap
 updateLeague leagueMap (team, points) =
     case M.lookup team leagueMap of Nothing -> M.insert team points leagueMap
-                                    Just oldPoints -> M.adjust (\_ -> oldPoints + points) team leagueMap
+                                    Just _ -> M.adjust (\oldPoints -> oldPoints + points) team leagueMap
