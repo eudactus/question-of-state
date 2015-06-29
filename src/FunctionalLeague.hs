@@ -3,31 +3,52 @@ module FunctionalLeague where
 -- https://downloads.haskell.org/~ghc/latest/docs/html/libraries/containers/Data-Map-Strict.html
 -- import qualified Data.Map.Strict as M
 import qualified Data.List as L
+import Control.Arrow ((&&&))
+import Data.Function
 
 type Team = String
-data MatchResult = MatchResult{teamA :: Team, scoreA :: Goals, teamB :: Team, scoreB :: Goals}
 type Points = Int
 type Goals = Int
-data TeamPoints = TeamPoints Team Points
+data MatchResult = MatchResult{teamA :: Team, scoreA :: Goals, teamB :: Team, scoreB :: Goals}
+data TeamMatchResults = TeamMatchResults Team [MatchResult]
 data TeamMatchPoints = TeamMatchPoints Team [Points]
+data TeamPoints = TeamPoints Team Points
 
-instance Eq TeamPoints where
-  (TeamPoints _ p1) == (TeamPoints _ p2) = p1 == p2
-instance Ord TeamPoints where
-  (TeamPoints _ p1) `compare` (TeamPoints _ p2) = p1 `compare` p2
+groupToMap :: (Ord b) => (a -> b) -> [a] -> [(b, [a])]
+groupToMap f = map (f . head &&& id)
+                   . L.groupBy ((==) `on` f)
+                   . L.sortBy (compare `on` f)
+
+forSameHomeTeam :: MatchResult -> MatchResult -> Bool
+forSameHomeTeam a b = (teamA a) == (teamA b)
+
+forSameAwayTeam :: MatchResult -> MatchResult -> Bool
+forSameAwayTeam a b = (teamB a) == (teamB b)
 
 resultPoints :: Team -> MatchResult -> Points
 resultPoints team (MatchResult ta sa tb sb)
     | team == winner = 2
     | sa == sb = 1
-    | otherwise = 0
+    | otherwise = 0 
     where winner = if sa > sb then ta else tb
 
---teamMatchPoints :: [MatchResult] -> [TeamMatchPoints]
---teamMatchPoints _ = []
+teamMatchResults :: [MatchResult] -> [TeamMatchResults]
+teamMatchResults results =
+  let homeResults = L.sortBy (compare `on` fst) (groupToMap teamA results)
+      awayResults = L.sortBy (compare `on` fst) (groupToMap teamB results)
+      combinedResults = zipWith (\h a -> ((fst h), (snd h) ++ (snd a))) homeResults awayResults
+  in map (\r -> TeamMatchResults (fst r) (snd r)) combinedResults
 
---teamPoints :: [MatchResult] -> [TeamPoints]
---teamPoints mrs = map (\mp -> TeamPoints "x", 0 ) (teamMatchPoints mrs)
+teamMatchPoints :: [TeamMatchResults] -> [TeamMatchPoints]
+teamMatchPoints results = map resultsToPoints results
+  where resultsToPoints (TeamMatchResults t mrs) = TeamMatchPoints t (map (resultPoints t) mrs)
+  
+teamPoints :: TeamMatchPoints -> TeamPoints
+teamPoints (TeamMatchPoints team points) = TeamPoints team (sum points)
+
+teamTotalPoints :: [TeamMatchPoints] -> [TeamPoints]
+teamTotalPoints tmps = map teamPoints tmps
 
 leagueTable :: [TeamPoints] -> [TeamPoints]
-leagueTable tp = L.sort tp
+leagueTable tp = L.sortBy compareTeamPoints tp
+  where compareTeamPoints (TeamPoints _ p1) (TeamPoints _ p2) = p1 `compare` p2
