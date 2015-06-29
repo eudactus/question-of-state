@@ -7,8 +7,6 @@ type Points = Int
 type Goals = Int
 
 data MatchResult = MatchResult{teamA :: Team, scoreA :: Goals, teamB :: Team, scoreB :: Goals}
-data TeamMatchResults = TeamMatchResults Team [MatchResult]
-data TeamMatchPoints = TeamMatchPoints Team [Points]
 data TeamPoints = TeamPoints Team Points
 
 type CompetitionResults  = [TeamPoints]
@@ -25,12 +23,11 @@ resultPoints team (MatchResult ta sa tb sb)
         isADraw = sa == sb
 
 teams :: [MatchResult] -> [Team]
-teams results = L.nub(concat (map teamsInMatch results))
-  where teamsInMatch m = [(teamA m), (teamB m)]
+teams results = L.nub(concat ([[(teamA m), (teamB m)] | m <- results]))
 
 competitionResults :: [MatchResult] -> CompetitionResults
-competitionResults results = map pointsForTeam (teams results)
-   where pointsForTeam team = TeamPoints team (sum (map (resultPoints team) results))
+competitionResults results = [pointsForTeam t | t <- teams results]
+   where pointsForTeam team = TeamPoints team $ sum [resultPoints team r | r <- results]
 
 leagueTable :: CompetitionResults -> CompetitionResults
 leagueTable tp = L.sortBy compareTeamPoints tp
