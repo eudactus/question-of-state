@@ -19,19 +19,18 @@ instance Show TeamPoints where
 resultPoints :: Team -> MatchResult -> Points
 resultPoints team (MatchResult ta sa tb sb)
   | team == winner = 3
-  | sa == sb = 1
+  | isADraw = 1
   | otherwise = 0
   where winner = if sa > sb then ta else tb
+        isADraw = sa == sb
 
 teams :: [MatchResult] -> [Team]
-teams mrs = L.nub(concat (map (\r -> [(teamA r), (teamB r)]) mrs))
-
-pointsForTeams :: [Team] -> [MatchResult] -> CompetitionResults
-pointsForTeams ts results = map pointsForTeam ts
-  where pointsForTeam team = TeamPoints team (sum (map (resultPoints team) results))
+teams results = L.nub(concat (map teamsInMatch results))
+  where teamsInMatch m = [(teamA m), (teamB m)]
 
 competitionResults :: [MatchResult] -> CompetitionResults
-competitionResults results = pointsForTeams (teams results) results
+competitionResults results = map pointsForTeam (teams results)
+   where pointsForTeam team = TeamPoints team (sum (map (resultPoints team) results))
 
 leagueTable :: CompetitionResults -> CompetitionResults
 leagueTable tp = L.sortBy compareTeamPoints tp
