@@ -1,4 +1,4 @@
-module FunctionalLeague where
+module Solution2 where
 
 -- https://downloads.haskell.org/~ghc/latest/docs/html/libraries/containers/Data-Map-Strict.html
 -- import qualified Data.Map.Strict as M

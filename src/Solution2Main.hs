@@ -1,6 +1,6 @@
-module Main2 where
+module Solution2Main where
 
-import FunctionalLeague
+import Solution2
 
 plymouthArgyle :: Team
 plymouthArgyle = "Plymouth Argyle"

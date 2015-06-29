@@ -1,7 +1,7 @@
 module LeagueTest where
 
 import Test.Hspec
-import StatePatternLeague
+import Solution1
 import qualified Data.Map.Strict as M
 
 liverpool :: Team

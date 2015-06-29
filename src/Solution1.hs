@@ -1,4 +1,4 @@
-module StatePatternLeague where
+module Solution1 where
 
 import Data.List
 import Data.Ord
