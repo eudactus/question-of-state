@@ -9,10 +9,18 @@ import Data.Function
 type Team = String
 type Points = Int
 type Goals = Int
+type CompetitionResults  = [TeamPoints]
+
 data MatchResult = MatchResult{teamA :: Team, scoreA :: Goals, teamB :: Team, scoreB :: Goals}
 data TeamMatchResults = TeamMatchResults Team [MatchResult]
 data TeamMatchPoints = TeamMatchPoints Team [Points]
 data TeamPoints = TeamPoints Team Points
+
+instance Show TeamPoints where
+  show (TeamPoints t p) = t ++ " : " ++ (show p)
+
+-- instance Show CompetitionResults where
+--  show cr = foldl (\acc r -> acc ++ r ++ "\n") "" cr
 
 groupToMap :: (Ord b) => (a -> b) -> [a] -> [(b, [a])]
 groupToMap f = map (f . head &&& id)
@@ -27,7 +35,7 @@ forSameAwayTeam a b = (teamB a) == (teamB b)
 
 resultPoints :: Team -> MatchResult -> Points
 resultPoints team (MatchResult ta sa tb sb)
-    | team == winner = 2
+    | team == winner = 3
     | sa == sb = 1
     | otherwise = 0 
     where winner = if sa > sb then ta else tb
@@ -49,6 +57,10 @@ teamPoints (TeamMatchPoints team points) = TeamPoints team (sum points)
 teamTotalPoints :: [TeamMatchPoints] -> [TeamPoints]
 teamTotalPoints tmps = map teamPoints tmps
 
-leagueTable :: [TeamPoints] -> [TeamPoints]
+competitionResults :: [MatchResult] -> CompetitionResults
+competitionResults = teamTotalPoints . teamMatchPoints . teamMatchResults
+
+leagueTable :: CompetitionResults -> CompetitionResults
 leagueTable tp = L.sortBy compareTeamPoints tp
-  where compareTeamPoints (TeamPoints _ p1) (TeamPoints _ p2) = p1 `compare` p2
+  where compareTeamPoints (TeamPoints _ p1) (TeamPoints _ p2) = p2 `compare` p1
+

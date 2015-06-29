@@ -1,0 +1,7 @@
+Notes
+=====
+
+
+Definition of the problem
+Competition results is: For each team, the total points earned by that team for each match it played in
+League table is: Competition results sorted by points descending
