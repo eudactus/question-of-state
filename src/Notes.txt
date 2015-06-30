@@ -9,6 +9,9 @@ League table is: Competition results sorted by points descending
 Definition of the problem - 2
 Given a set of Match Results [homeScore: [teamName, goals], awayScore: [teamName, goals]]
 The Teams are: the distinct team names found in the matches
-Competition results is: For each of the Team, the total points earned by that team for each match it played in
+Competition results is: For each of the Teams, the total points earned by that team for each match it played in
 Points earned by a team in a match is: 3 if the team is the winner, 1 if the match is a draw, otherwise 0
 League table is: Competition results sorted by points descending
+
+Extended problem
+Competition results is: For each of the Teams, the combined P/W/D/L/GF/GA/GD/PTS for that team for each match it played in
