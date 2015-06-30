@@ -22,8 +22,8 @@ resultsScores (r:rs) = (resultScores r) ++ (resultsScores rs)
 
 resultScores :: MatchResult -> [Score]
 resultScores (MatchResult ta sa tb sb)
-    | sa > sb   = [(ta, 2), (tb, 0)]
-    | sa < sb   = [(ta, 0), (tb, 2)]
+    | sa > sb   = [(ta, 3), (tb, 0)]
+    | sa < sb   = [(ta, 0), (tb, 3)]
     | otherwise = [(ta, 1), (tb, 1)]
 
 updateLeague :: LeagueMap -> Score -> LeagueMap
