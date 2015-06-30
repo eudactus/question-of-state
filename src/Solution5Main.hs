@@ -1,6 +1,6 @@
-module Solution4Main where
+module Solution5Main where
 
-import Solution4
+import Solution5
 
 plymouthArgyle :: Team
 plymouthArgyle = "Plymouth Argyle"
@@ -18,5 +18,5 @@ main = do
         result3 = MatchResult liverpool 1 plymouthArgyle 3
         results = [result1, result2, result3]
         leaguePositions = leagueTable $ competitionResults results
-    putStrLn "The current league table from Solution 4 is..."
+    putStrLn "The current league table from Solution 5 is..."
     mapM_ (putStrLn . show) leaguePositions
