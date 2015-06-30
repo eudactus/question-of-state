@@ -12,10 +12,10 @@ type LeagueMap = M.Map Team Points
 type Scoring = (Int, Int) -> (Int, Int)
 
 leagueTable :: [MatchResult] -> [Score]
-leagueTable results = reverse . sortBy (comparing snd) $ M.toList (calculateLeagueMap results)
+leagueTable results = reverse . sortBy (comparing snd) $ M.toList (calculateLeagueMap footballScoring results)
 
-calculateLeagueMap :: [MatchResult] -> LeagueMap
-calculateLeagueMap results = foldl updateLeague M.empty $ resultsScores footballScoring results
+calculateLeagueMap :: Scoring -> [MatchResult] -> LeagueMap
+calculateLeagueMap scoring results = foldl updateLeague M.empty $ resultsScores scoring results
 
 resultsScores :: Scoring -> [MatchResult] -> [Score]
 resultsScores _ [] = []
