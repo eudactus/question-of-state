@@ -13,7 +13,7 @@ celtic = "Celtic"
 plymouthArgyle :: Team
 plymouthArgyle = "Plymouth Argyle"
 
-testScoring :: Scoring
+testScoring :: FootballScoring
 testScoring (sa, sb)
     | sa > sb   = (3, 0)
     | sa < sb   = (0, 3)

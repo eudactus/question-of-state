@@ -9,25 +9,25 @@ data MatchResult = MatchResult{teamA :: Team, scoreA :: Int, teamB :: Team, scor
 type Points = Int
 type Score = (Team, Points)
 type LeagueMap = M.Map Team Points
-type Scoring = (Int, Int) -> (Int, Int)
+type FootballScoring = (Int, Int) -> (Int, Int)
 
 leagueTable :: [MatchResult] -> [Score]
-leagueTable results = reverse . sortBy (comparing snd) $ M.toList (calculateLeagueMap footballScoring results)
+leagueTable results = reverse . sortBy (comparing snd) $ M.toList (calculateLeagueMap threePointsForAWin results)
 
-calculateLeagueMap :: Scoring -> [MatchResult] -> LeagueMap
+calculateLeagueMap :: FootballScoring -> [MatchResult] -> LeagueMap
 calculateLeagueMap scoring results = foldl updateLeague M.empty $ resultsScores scoring results
 
-resultsScores :: Scoring -> [MatchResult] -> [Score]
+resultsScores :: FootballScoring -> [MatchResult] -> [Score]
 resultsScores _ [] = []
 resultsScores s (r:rs) = (resultScores s r) ++ (resultsScores s rs)
 
-footballScoring :: Scoring
-footballScoring (sa, sb)
+threePointsForAWin :: FootballScoring
+threePointsForAWin (sa, sb)
     | sa > sb   = (3, 0)
     | sa < sb   = (0, 3)
     | otherwise = (1, 1)
 
-resultScores :: Scoring -> MatchResult -> [Score]
+resultScores :: FootballScoring -> MatchResult -> [Score]
 resultScores scoring (MatchResult ta sa tb sb) =
     let (ra, rb) = scoring (sa, sb)
         in [(ta, ra), (tb, rb)]
