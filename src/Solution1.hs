@@ -9,40 +9,30 @@ data MatchResult = MatchResult{teamA :: Team, scoreA :: Int, teamB :: Team, scor
 type Points = Int
 type Score = (Team, Points)
 type LeagueMap = M.Map Team Points
--- eliminate
-type FootballScoring = (Int, Int) -> (Int, Int)
-newtype ThreePointsForAWin a = ThreePointsForAWin { getPoints :: (a, a) }
+newtype ThreePointsForAWin = ThreePointsForAWin { getPoints :: (Int, Int) }
 
 class PairScoreable a where
     score :: a -> (Int, Int)
 
-instance (Ord a) => PairScoreable (ThreePointsForAWin a) where
+instance PairScoreable ThreePointsForAWin where
     score (ThreePointsForAWin (sa, sb))
         | sa > sb   = (3, 0)
         | sa < sb   = (0, 3)
         | otherwise = (1, 1)
 
--- eliminate
-threePointsForAWin :: FootballScoring
-threePointsForAWin (sa, sb)
-    | sa > sb   = (3, 0)
-    | sa < sb   = (0, 3)
-    | otherwise = (1, 1)
-
 leagueTable :: [MatchResult] -> [Score]
-leagueTable results = reverse . sortBy (comparing snd) $ M.toList (calculateLeagueMap threePointsForAWin results)
+leagueTable results = reverse . sortBy (comparing snd) $ M.toList (calculateLeagueMap results)
 
-calculateLeagueMap :: FootballScoring -> [MatchResult] -> LeagueMap
-calculateLeagueMap scoring results = foldl updateLeague M.empty $ resultsScores scoring results
+calculateLeagueMap :: [MatchResult] -> LeagueMap
+calculateLeagueMap results = foldl updateLeague M.empty $ resultsScores results
 
-resultsScores :: FootballScoring -> [MatchResult] -> [Score]
-resultsScores _ [] = []
-resultsScores s (r:rs) = (singleResultScores s r) ++ (resultsScores s rs)
+resultsScores :: [MatchResult] -> [Score]
+resultsScores [] = []
+resultsScores (r:rs) = (singleResultScores r) ++ (resultsScores rs)
 
--- Introduce ThreePointsForAWin somehow
-singleResultScores :: FootballScoring -> MatchResult -> [Score]
-singleResultScores scoring (MatchResult ta sa tb sb) =
-    let (ra, rb) = scoring (sa, sb)
+singleResultScores :: MatchResult -> [Score]
+singleResultScores (MatchResult ta sa tb sb) =
+    let (ra, rb) = score $ ThreePointsForAWin (sa, sb)
         in [(ta, ra), (tb, rb)]
 
 updateLeague :: LeagueMap -> Score -> LeagueMap
